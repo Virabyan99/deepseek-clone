@@ -4,9 +4,11 @@ import { signIn } from 'next-auth/react';
 import Image from 'next/image';
 import React, { useState } from 'react';
 import UserButton from './UserButton';
+import ChatLabel from './ChatLabel';
 
 const Sidebar = ({ expand, setExpand }) => {
   const { user } = useAppContext();
+  const [openMenu, setOpenMenu] = useState({id: 0, open: false});
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   // Toggle dropdown visibility
@@ -84,7 +86,7 @@ const Sidebar = ({ expand, setExpand }) => {
           className={`mt-8 text-white/25 text-sm ${expand ? 'block' : 'hidden'}`}
         >
           <p className="my-1">Recents</p>
-          {/* Chat label */}
+          <ChatLabel openMenu={openMenu} setOpenMenu={setOpenMenu}/>
         </div>
       </div>
       <div>
