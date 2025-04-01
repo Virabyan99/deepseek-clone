@@ -1,5 +1,3 @@
-//context\AppContext.jsx
-
 "use client";
 
 import { useState, useEffect, createContext, useContext } from 'react';
@@ -15,8 +13,8 @@ export const useAppContext = () => {
 export const AppContextProvider = ({ children }) => {
   const { data: session } = useSession();
   const user = session?.user;
-  
-  // Add this log to debug session data
+
+  // Log session data for debugging
   useEffect(() => {
     console.log('Frontend session:', session);
   }, [session]);
@@ -31,15 +29,14 @@ export const AppContextProvider = ({ children }) => {
       return null;
     }
     try {
-      const userId = String(user.id); // Ensure user.id is a string, like in Postman
+      const userId = String(user.id); // Ensure user.id is a string, consistent with Postman
       console.log('Creating new chat with userId:', userId);
       const result = await createChat(userId);
       console.log('API Response from createChat:', result); // Log full response
       if (result.success && result.chatId) {
         const newChat = { id: result.chatId, name: 'New Chat', user_id: userId, messages: [] };
-        setSelectedChat(newChat);
         setChats(prevChats => [...prevChats, newChat]);
-        await fetchChatMessages(newChat.id);
+        setSelectedChat(newChat);
         return newChat;
       } else {
         console.error('Chat creation failed. API response:', result);
@@ -76,7 +73,9 @@ export const AppContextProvider = ({ children }) => {
         setChats(fetchedChats);
         if (fetchedChats.length > 0) {
           setSelectedChat(fetchedChats[0]);
-          await fetchChatMessages(fetchedChats[0].id);
+        } else {
+          setSelectedChat(null);
+          setSelectedChatMessages([]);
         }
       } else {
         console.error('Error fetching chats:', result.error);
@@ -86,11 +85,21 @@ export const AppContextProvider = ({ children }) => {
     }
   };
 
+  // Fetch chats when user is available
   useEffect(() => {
     if (user?.id) {
       fetchUsersChats();
     }
   }, [user]);
+
+  // Fetch messages whenever selectedChat changes
+  useEffect(() => {
+    if (selectedChat && user?.id) {
+      fetchChatMessages(selectedChat.id);
+    } else {
+      setSelectedChatMessages([]);
+    }
+  }, [selectedChat, user?.id]);
 
   const value = {
     user,

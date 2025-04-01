@@ -7,11 +7,11 @@ import UserButton from './UserButton';
 import ChatLabel from './ChatLabel';
 
 const Sidebar = ({ expand, setExpand }) => {
-  const { user } = useAppContext();
-  const [openMenu, setOpenMenu] = useState({id: 0, open: false});
+  const { user, chats, createNewChat } = useAppContext();
+  const [openMenu, setOpenMenu] = useState({ id: 0, open: false });
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-  // Toggle dropdown visibility
+  // Toggle dropdown visibility for UserButton
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
@@ -23,6 +23,7 @@ const Sidebar = ({ expand, setExpand }) => {
       }`}
     >
       <div>
+        {/* Logo and Sidebar Toggle */}
         <div
           className={`flex ${
             expand ? 'flex-row gap-10' : 'flex-col items-center gap-8'
@@ -60,7 +61,9 @@ const Sidebar = ({ expand, setExpand }) => {
           </div>
         </div>
 
+        {/* New Chat Button */}
         <button
+          onClick={createNewChat}
           className={`mt-8 flex items-center justify-center cursor-pointer ${
             expand
               ? 'bg-primary hover:opacity-90 rounded-2xl gap-2 p-2.5 w-max'
@@ -82,13 +85,24 @@ const Sidebar = ({ expand, setExpand }) => {
           {expand && <p className="text-white text font-medium">New chat</p>}
         </button>
 
+        {/* Recent Chats */}
         <div
           className={`mt-8 text-white/25 text-sm ${expand ? 'block' : 'hidden'}`}
         >
           <p className="my-1">Recents</p>
-          <ChatLabel openMenu={openMenu} setOpenMenu={setOpenMenu}/>
+          {chats.map((chat) => (
+            <ChatLabel
+              key={chat.id}
+              id={chat.id}
+              name={chat.name}
+              openMenu={openMenu}
+              setOpenMenu={setOpenMenu}
+            />
+          ))}
         </div>
       </div>
+
+      {/* Bottom Section: Get App and Profile */}
       <div>
         <div
           className={`flex items-center cursor-pointer group relative ${
@@ -124,8 +138,10 @@ const Sidebar = ({ expand, setExpand }) => {
             </>
           )}
         </div>
+
+        {/* Profile Section */}
         <div
-          onClick={user ? toggleDropdown : signIn}
+          onClick={user ? toggleDropdown : () => signIn()}
           className={`flex items-center ${
             expand ? 'hover:bg-white/10 rounded-lg' : 'justify-center w-full'
           } gap-3 text-white/60 text-sm p-2 mt-2 cursor-pointer`}

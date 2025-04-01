@@ -1,5 +1,6 @@
 import { Inter } from 'next/font/google'
 import './globals.css'
+import "./prism.css"
 import ClientProviders from '@/components/ClientProviders' // Adjust the path if needed
 import { Toaster } from 'react-hot-toast'
 
