@@ -1,3 +1,5 @@
+//components\Sidebar.jsx
+
 import { assets } from '@/assets/assets';
 import { useAppContext } from '@/context/AppContext';
 import { signIn } from 'next-auth/react';
