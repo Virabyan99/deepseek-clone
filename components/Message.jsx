@@ -1,3 +1,5 @@
+//components\Message.jsx
+
 import { assets } from '@/assets/assets'
 import Image from 'next/image'
 import React, { useEffect } from 'react'

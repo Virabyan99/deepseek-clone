@@ -1,3 +1,4 @@
+//app\page.jsx
 'use client'
 import { assets } from '@/assets/assets'
 import Message from '@/components/Message'
