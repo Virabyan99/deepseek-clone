@@ -1,15 +1,14 @@
-//components\PromptBox.jsx
-
 'use client';
 import { assets } from '@/assets/assets';
 import { useAppContext } from '@/context/AppContext';
 import { sendMessage } from '@/lib/api';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import toast from 'react-hot-toast';
 
 const PromptBox = ({ setIsLoading, isLoading }) => {
   const [prompt, setPrompt] = useState('');
+  const textareaRef = useRef(null);
   const {
     user,
     selectedChat,
@@ -18,6 +17,14 @@ const PromptBox = ({ setIsLoading, isLoading }) => {
     setSelectedChatMessages,
     createNewChat,
   } = useAppContext();
+
+  // Adjust textarea height whenever prompt changes
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto'; // Reset height to recalculate
+      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`; // Set to content height
+    }
+  }, [prompt]);
 
   const sendPrompt = async (e) => {
     e.preventDefault();
@@ -31,7 +38,6 @@ const PromptBox = ({ setIsLoading, isLoading }) => {
     try {
       let currentChat = selectedChat;
       if (!currentChat) {
-        console.log('No chat selected, creating new one...');
         currentChat = await createNewChat();
         if (!currentChat) {
           console.error('Chat creation failed');
@@ -39,12 +45,9 @@ const PromptBox = ({ setIsLoading, isLoading }) => {
           setIsLoading(false);
           return;
         }
-        console.log('New chat created:', currentChat);
         setSelectedChat(currentChat);
         toast.success('Chat created successfully!');
       }
-  
-      console.log('Sending message with:', { userId: user.id, chatId: currentChat.id, prompt: promptCopy });
   
       const userMessage = {
         role: 'user',
@@ -54,7 +57,6 @@ const PromptBox = ({ setIsLoading, isLoading }) => {
       setSelectedChatMessages((prev) => [...prev, userMessage]);
   
       const result = await sendMessage(user.id, currentChat.id, promptCopy);
-      console.log('sendMessage result:', result);
   
       if (result.success) {
         const assistantMessage = result.data;
@@ -98,12 +100,13 @@ const PromptBox = ({ setIsLoading, isLoading }) => {
       className={`w-full ${selectedChat?.messages.length > 0 ? 'max-w-3xl' : 'max-w-2xl'} bg-[#404045] p-4 rounded-3xl mt-4 transition-all`}
     >
       <textarea
-        rows={2}
         placeholder="Message DeepSeek"
         required
-        className="outline-none w-full resize-none overflow-hidden break-words bg-transparent"
+        className="outline-none w-full resize-none break-words bg-transparent"
         onChange={(e) => setPrompt(e.target.value)}
         value={prompt}
+        ref={textareaRef}
+        style={{ maxHeight: '200px', overflowY: 'auto' }}
       />
       <div className="flex items-center justify-between text-sm">
         <div className="flex items-center gap-2">

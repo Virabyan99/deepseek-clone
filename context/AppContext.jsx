@@ -14,10 +14,7 @@ export const AppContextProvider = ({ children }) => {
   const { data: session } = useSession();
   const user = session?.user;
 
-  // Log session data for debugging
-  useEffect(() => {
-    console.log('Frontend session:', session);
-  }, [session]);
+
 
   const [chats, setChats] = useState([]);
   const [selectedChat, setSelectedChat] = useState(null);
@@ -30,9 +27,7 @@ export const AppContextProvider = ({ children }) => {
     }
     try {
       const userId = String(user.id); // Ensure user.id is a string, consistent with Postman
-      console.log('Creating new chat with userId:', userId);
       const result = await createChat(userId);
-      console.log('API Response from createChat:', result); // Log full response
       if (result.success && result.chatId) {
         const newChat = { id: result.chatId, name: 'New Chat', user_id: userId, messages: [] };
         setChats(prevChats => [...prevChats, newChat]);
@@ -51,9 +46,7 @@ export const AppContextProvider = ({ children }) => {
   const fetchChatMessages = async (chatId) => {
     if (!user?.id || !chatId) return;
     try {
-      console.log('Fetching messages for chat ID:', chatId);
       const result = await getChatMessages(user.id, chatId);
-      console.log('Fetched messages result:', result);
       if (result.success) {
         setSelectedChatMessages(result.data);
       } else {

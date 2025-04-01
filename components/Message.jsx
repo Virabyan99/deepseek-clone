@@ -73,7 +73,7 @@ const copyMessage = ()=>{
             </div>
           </div>
           {role === 'user' ? (
-            <span className="text-white/90">{content}</span>
+            <span className="text-white/90"><Markdown>{content}</Markdown></span>
           ) : (
             <>
               <Image
