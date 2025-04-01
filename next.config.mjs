@@ -1,12 +1,15 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     webpack: (config, { isServer }) => {
-      if (!isServer) {
-        config.resolve.fallback = {
-          ...config.resolve.fallback,
-          crypto: 'crypto-browserify',
-        };
-      }
+      // Add fallbacks for Node.js modules
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        crypto: 'crypto-browserify',
+        querystring: 'querystringify',
+        http: 'stream-http',
+        https: 'stream-http',
+        stream: 'stream-browserify',
+      };
       return config;
     },
   };
