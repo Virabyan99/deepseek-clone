@@ -10,16 +10,21 @@
   },
   "dependencies": {
     "axios": "^1.8.4",
+    "crypto-browserify": "^3.12.1",
     "next": "15.2.4",
-    "next-auth": "^4.24.11",
+    "next-auth": "^5.0.0-beta.25",
     "prismjs": "^1.30.0",
+    "querystringify": "^2.2.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-hot-toast": "^2.5.2",
     "react-markdown": "^10.1.0",
+    "stream-browserify": "^3.0.0",
+    "stream-http": "^3.2.0",
     "svix": "^1.62.0"
   },
   "devDependencies": {
+    "@cloudflare/next-on-pages": "^1.13.12",
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
     "eslint": "^9",
